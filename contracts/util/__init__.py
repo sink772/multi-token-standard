@@ -14,16 +14,9 @@
 
 from iconservice import *
 
-from .token.irc31_basic import IRC31Basic
+ZERO_ADDRESS = Address.from_prefix_and_int(AddressPrefix.EOA, 0)
 
 
-class SampleMultiToken(IRC31Basic):
-
-    def __init__(self, db: 'IconScoreDatabase') -> None:
-        super().__init__(db)
-
-    def on_install(self) -> None:
-        pass
-
-    def on_update(self) -> None:
-        pass
+def require(condition: bool, message: str):
+    if not condition:
+        revert(message)

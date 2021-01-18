@@ -14,16 +14,13 @@
 
 from iconservice import *
 
-from .token.irc31_basic import IRC31Basic
 
+class IRC31ReceiverInterface:
 
-class SampleMultiToken(IRC31Basic):
-
-    def __init__(self, db: 'IconScoreDatabase') -> None:
-        super().__init__(db)
-
-    def on_install(self) -> None:
+    @interface
+    def onIRC31Received(self, _operator: Address, _from: Address, _id: int, _value: int, _data: bytes):
         pass
 
-    def on_update(self) -> None:
+    @interface
+    def onIRC31BatchReceived(self, _operator: Address, _from: Address, _ids: List[int], _values: List[int], _data: bytes):
         pass
