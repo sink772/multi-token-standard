@@ -234,3 +234,14 @@ class IRC31Basic(IconScoreBase):
         :param _value: the updated URI string
         """
         pass
+
+    # ===============================================================================================
+    # Internal methods
+    # ===============================================================================================
+
+    def _mint(self, _owner: Address, _id: int, _supply: int, _uri: str):
+        self._balances[_id][_owner] = _supply
+
+        # emit transfer event for Mint semantic
+        self.TransferSingle(_owner, ZERO_ADDRESS, _owner, _id, _supply)
+        self.URI(_id, _uri)

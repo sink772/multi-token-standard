@@ -14,16 +14,25 @@
 
 from iconservice import *
 
-from .token.irc31_mintable import IRC31Mintable
+from .irc31_basic import IRC31Basic
+from ..util import require
 
 
-class SampleMultiToken(IRC31Mintable):
+class IRC31Mintable(IRC31Basic):
 
     def __init__(self, db: 'IconScoreDatabase') -> None:
         super().__init__(db)
+        # id ==> creator
+        self._creators = DictDB('creators', db, value_type=Address)
 
-    def on_install(self) -> None:
-        pass
+    @external
+    def mint(self, _id: int, _supply: int, _uri: str):
+        """
+        Creates a new token type and assigns _initialSupply to creator
+        """
+        require(self._creators[_id] is None, "Token is already minted")
+        require(_supply > 0, "Supply should be positive")
+        require(len(_uri) > 0, "Uri should be set")
 
-    def on_update(self) -> None:
-        pass
+        self._creators[_id] = self.msg.sender
+        super()._mint(self.msg.sender, _id, _supply, _uri)
