@@ -14,8 +14,7 @@
 
 from iconsdk.libs.in_memory_zip import gen_deploy_data_content
 
-from util import get_icon_service, load_keystore
-from util.txhandler import TxHandler
+from scripts.config import Config
 
 
 def get_score_content():
@@ -23,24 +22,18 @@ def get_score_content():
     return gen_deploy_data_content(score_path)
 
 
-def main():
-    icon_service, nid = get_icon_service('local')
-    owner_wallet = load_keystore("res/keystore_test1", "test1_Account")
-    print(">>> owner address: ", owner_wallet.get_address())
+def deploy():
+    owner = Config().owner
+    tx_handler = Config().tx_handler
+    print(">>> owner address:", owner.get_address())
 
-    tx_handler = TxHandler(icon_service, nid)
     content = get_score_content()
-    tx_hash = tx_handler.install(owner_wallet,
-                                 content)
+    print(">>> content size =", len(content))
+    tx_hash = tx_handler.install(owner, content)
     print(">>> deploy txHash:", tx_hash)
 
     tx_result = tx_handler.ensure_tx_result(tx_hash)
     score_address = tx_result["scoreAddress"]
     print(">>> scoreAddress:", score_address)
-
-
-if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        print('exit')
+    # print(">>> api =", tx_handler.get_score_api(score_address))
+    return score_address

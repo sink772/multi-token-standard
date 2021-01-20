@@ -14,6 +14,7 @@
 
 from time import sleep
 
+from iconsdk.builder.call_builder import CallBuilder
 from iconsdk.builder.transaction_builder import (
     CallTransactionBuilder, DeployTransactionBuilder, TransactionBuilder
 )
@@ -28,6 +29,10 @@ class TxHandler:
     def __init__(self, service, nid):
         self._icon_service = service
         self._nid = nid
+
+    @property
+    def icon_service(self):
+        return self._icon_service
 
     def _deploy(self, wallet, to, content, params, limit):
         transaction = DeployTransactionBuilder() \
@@ -54,6 +59,14 @@ class TxHandler:
             estimated_step = self._icon_service.estimate_step(transaction)
             signed_tx = SignedTransaction(transaction, wallet, estimated_step)
         return self._icon_service.send_transaction(signed_tx)
+
+    def call(self, to, method, params=None):
+        _call = CallBuilder() \
+            .to(to) \
+            .method(method) \
+            .params(params) \
+            .build()
+        return self._icon_service.call(_call)
 
     def invoke(self, wallet, to, method, params, limit=None):
         transaction = CallTransactionBuilder() \
@@ -87,8 +100,8 @@ class TxHandler:
             elif 'result' in result:
                 result = result['result']
                 print_response("Result", result)
-                if result['status'] != '0x1':
-                    die('Error: transaction failed')
+                # if result['status'] != '0x1':
+                #     die('Error: transaction failed')
                 return result
             else:
                 print_response("Response", result)
