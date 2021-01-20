@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from scripts.util import get_icon_service, load_keystore
+from iconsdk.wallet.wallet import KeyWallet
+
+from scripts.util import get_icon_service, load_keystore, in_loop
 from scripts.util.txhandler import TxHandler
 
 
@@ -31,3 +33,9 @@ class Config(metaclass=Singleton):
         icon_service, nid = get_icon_service('local')
         self.tx_handler = TxHandler(icon_service, nid)
         self.owner = load_keystore("res/keystore_test1", "test1_Account")
+
+        self.accounts = []
+        for i in range(5):
+            wallet = KeyWallet.create()
+            self.tx_handler.transfer(self.owner, wallet.get_address(), in_loop(100))
+            self.accounts.append(wallet)

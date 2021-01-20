@@ -12,16 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import unittest
 from random import randint
 
 from scripts.config import Config
 from scripts.deploy_contract import deploy
 from scripts.score import Score
+from tests import TestBase
 
 
-class TestIRC31Mintable(unittest.TestCase):
+class TestIRC31Mintable(TestBase):
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -29,16 +28,6 @@ class TestIRC31Mintable(unittest.TestCase):
         cls.owner = Config().owner
         cls.tx_handler = Config().tx_handler
         cls.score = Score(cls.tx_handler, deploy())
-
-    def assertSuccess(self, status: str):
-        self.assertEqual(1, int(status, 16))
-
-    def assertFailure(self, status: str):
-        self.assertEqual(0, int(status, 16))
-
-    @staticmethod
-    def _getTokenId():
-        return int(os.urandom(4).hex(), 16)
 
     def test_mint(self):
         _id = self._getTokenId()
