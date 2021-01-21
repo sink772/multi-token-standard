@@ -27,7 +27,7 @@ class TestIRC31Basic(TestBase):
         super().setUpClass()
         cls.owner = Config().owner
         cls.tx_handler = Config().tx_handler
-        cls.score = Score(cls.tx_handler, deploy())
+        cls.score = Score(cls.tx_handler, deploy('multi_token'))
 
     def mint_token(self, supply):
         _id = self._getTokenId()

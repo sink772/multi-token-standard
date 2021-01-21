@@ -17,17 +17,17 @@ from iconsdk.libs.in_memory_zip import gen_deploy_data_content
 from scripts.config import Config
 
 
-def get_score_content():
-    score_path = "./contracts"
+def get_score_content(target: str):
+    score_path = f"./contracts/{target}"
     return gen_deploy_data_content(score_path)
 
 
-def deploy():
+def deploy(target: str):
     owner = Config().owner
     tx_handler = Config().tx_handler
     print(">>> owner address:", owner.get_address())
 
-    content = get_score_content()
+    content = get_score_content(target)
     print(">>> content size =", len(content))
     tx_hash = tx_handler.install(owner, content)
     print(">>> deploy txHash:", tx_hash)

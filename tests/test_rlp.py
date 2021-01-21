@@ -14,7 +14,7 @@
 
 from unittest import TestCase
 
-from contracts.util.rlp import rlp_encode_bytes, rlp_encode_list, int_to_bytes
+from contracts.multi_token.util.rlp import rlp_encode_bytes, rlp_encode_list, int_to_bytes
 from scripts.util.rlp import rlp_decode
 
 
