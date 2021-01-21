@@ -22,12 +22,11 @@ from tests import TestBase
 
 class TestIRC31Basic(TestBase):
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        cls.owner = Config().owner
-        cls.tx_handler = Config().tx_handler
-        cls.score = Score(cls.tx_handler, deploy('multi_token'))
+    def setUp(self) -> None:
+        super().setUp()
+        self.owner = Config().owner
+        self.tx_handler = Config().tx_handler
+        self.score = Score(self.tx_handler, deploy('multi_token'))
 
     def mint_token(self, supply):
         _id = self._getTokenId()
@@ -41,7 +40,7 @@ class TestIRC31Basic(TestBase):
         self.assertSuccess(tx_result['status'])
         return _id
 
-    def ignore_test_transferFrom(self):
+    def test_transferFrom(self):
         supply = 100
         _id = self.mint_token(supply)
         alice = Config().accounts[0]
@@ -95,7 +94,6 @@ class TestIRC31Basic(TestBase):
                 '_id': _id
             }
             balance = self.score.call('balanceOf', params2)
-            print(">> bal=", balance)
             self.assertEqual(exp, int(balance, 16))
 
     def test_transferFromBatch(self):
