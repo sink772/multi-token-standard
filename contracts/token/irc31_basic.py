@@ -16,6 +16,7 @@ from iconservice import *
 
 from .irc31_receiver import IRC31ReceiverInterface
 from ..util import ZERO_ADDRESS, require
+from ..util.rlp import rlp_encode_list
 
 
 class IRC31Basic(IconScoreBase):
@@ -148,8 +149,7 @@ class IRC31Basic(IconScoreBase):
             self._balances[_id][_to] = self._balances[_id][_to] + _value
 
         # emit event
-        # TODO: RLP encoding
-        #self.TransferBatch(self.msg.sender, _from, _to, _ids, _values)
+        self.TransferBatch(self.msg.sender, _from, _to, rlp_encode_list(_ids), rlp_encode_list(_values))
 
         if _to.is_contract:
             # call `onIRC31BatchReceived` if the recipient is a contract
