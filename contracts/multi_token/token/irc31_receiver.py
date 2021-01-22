@@ -15,7 +15,7 @@
 from iconservice import *
 
 
-class IRC31ReceiverInterface:
+class IRC31ReceiverInterface(InterfaceScore):
 
     @interface
     def onIRC31Received(self, _operator: Address, _from: Address, _id: int, _value: int, _data: bytes):

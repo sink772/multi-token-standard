@@ -108,7 +108,8 @@ class IRC31Basic(IconScoreBase):
         if _to.is_contract:
             # call `onIRC31Received` if the recipient is a contract
             recipient_score = self.create_interface_score(_to, IRC31ReceiverInterface)
-            recipient_score.onIRC31Received(self.msg.sender, _from, _id, _value, _data)
+            recipient_score.onIRC31Received(self.msg.sender, _from, _id, _value,
+                                            b'' if _data is None else _data)
 
     @external
     def transferFromBatch(self, _from: Address, _to: Address, _ids: List[int], _values: List[int], _data: bytes = None):
@@ -154,7 +155,8 @@ class IRC31Basic(IconScoreBase):
         if _to.is_contract:
             # call `onIRC31BatchReceived` if the recipient is a contract
             recipient_score = self.create_interface_score(_to, IRC31ReceiverInterface)
-            recipient_score.onIRC31BatchReceived(self.msg.sender, _from, _ids, _values, _data)
+            recipient_score.onIRC31BatchReceived(self.msg.sender, _from, _ids, _values,
+                                                 b'' if _data is None else _data)
 
     @external
     def setApprovalForAll(self, _operator: Address, _approved: bool):
