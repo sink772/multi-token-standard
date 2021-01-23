@@ -27,6 +27,8 @@ class IRC31Basic(IconScoreBase):
         self._balances = DictDB('balances', db, value_type=int, depth=2)
         # owner => (operator => approved)
         self._operatorApproval = DictDB('approval', db, value_type=bool, depth=2)
+        # id => token URI
+        self._tokenURIs = DictDB('token_uri', db, value_type=str)
 
     def on_install(self) -> None:
         pass
@@ -69,7 +71,7 @@ class IRC31Basic(IconScoreBase):
         :param _id: ID of the token
         :return: the URI string
         """
-        pass
+        return self._tokenURIs[_id]
 
     @external
     def transferFrom(self, _from: Address, _to: Address, _id: int, _value: int, _data: bytes = None):
@@ -246,4 +248,10 @@ class IRC31Basic(IconScoreBase):
 
         # emit transfer event for Mint semantic
         self.TransferSingle(_owner, ZERO_ADDRESS, _owner, _id, _supply)
+
+        # set token URI and emit event
+        self._setTokenURI(_id, _uri)
+
+    def _setTokenURI(self, _id: int, _uri: str):
+        self._tokenURIs[_id] = _uri
         self.URI(_id, _uri)

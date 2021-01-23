@@ -36,3 +36,13 @@ class IRC31Mintable(IRC31Basic):
 
         self._creators[_id] = self.msg.sender
         super()._mint(self.msg.sender, _id, _supply, _uri)
+
+    @external
+    def setTokenURI(self, _id: int, _uri: str):
+        """
+        Updates the given token URI
+        """
+        require(self._creators[_id] == self.msg.sender, "Not token creator")
+        require(len(_uri) > 0, "Uri should be set")
+
+        super()._setTokenURI(_id, _uri)
