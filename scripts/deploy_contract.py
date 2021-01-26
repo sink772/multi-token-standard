@@ -22,9 +22,9 @@ def get_score_content(target: str):
     return gen_deploy_data_content(score_path)
 
 
-def deploy(target: str):
-    owner = Config().owner
-    tx_handler = Config().tx_handler
+def deploy(config: Config, target: str):
+    owner = config.owner
+    tx_handler = config.tx_handler
     print(">>> owner address:", owner.get_address())
 
     content = get_score_content(target)

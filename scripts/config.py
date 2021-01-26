@@ -29,13 +29,16 @@ class Singleton(type):
 
 class Config(metaclass=Singleton):
 
-    def __init__(self) -> None:
-        icon_service, nid = get_icon_service('local')
+    def __init__(self, endpoint: str, keystore_path: str, passwd=None) -> None:
+        icon_service, nid = get_icon_service(endpoint)
         self.tx_handler = TxHandler(icon_service, nid)
-        self.owner = load_keystore("res/keystore_test1", "test1_Account")
+        self.endpoint = endpoint
+        self.owner = load_keystore(keystore_path, passwd)
 
-        self.accounts = []
-        for i in range(5):
-            wallet = KeyWallet.create()
-            self.tx_handler.transfer(self.owner, wallet.get_address(), in_loop(100))
-            self.accounts.append(wallet)
+        # generate some test accounts
+        if endpoint == 'local':
+            self.accounts = []
+            for i in range(5):
+                wallet = KeyWallet.create()
+                self.tx_handler.transfer(self.owner, wallet.get_address(), in_loop(100))
+                self.accounts.append(wallet)

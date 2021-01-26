@@ -25,5 +25,9 @@ class TestBase(unittest.TestCase):
         self.assertEqual(0, int(status, 16))
 
     @staticmethod
-    def _getTokenId():
+    def getLocalEnvs():
+        return 'local', 'res/keystore_test1', 'test1_Account'
+
+    @staticmethod
+    def getTokenId():
         return int(os.urandom(4).hex(), 16)

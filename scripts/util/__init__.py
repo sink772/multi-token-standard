@@ -45,6 +45,7 @@ def get_icon_service(endpoint):
         "testnet": ['https://test-ctz.solidwallet.io', 0x2],
         "bicon":   ['https://bicon.net.solidwallet.io', 0x3],
         "gangnam": ['https://gicon.net.solidwallet.io', 0x7],
+        "gochain": ['http://localhost:9082', 0x3],
         "local":   ['http://localhost:9000', 0x3],
     }
     url, nid = endpoint_map.get(endpoint, [endpoint, 0x3])
@@ -63,6 +64,7 @@ def get_address_from_keystore(keystore):
 def load_keystore(keystore_path, passwd=None):
     try:
         if passwd is None:
+            print("Keystore:", keystore_path)
             passwd = getpass.getpass()
         return KeyWallet.load(keystore_path, passwd)
     except KeyStoreException as e:

@@ -25,13 +25,14 @@ class TestIRC31Receiver(TestBase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.owner = Config().owner
-        cls.tx_handler = Config().tx_handler
-        cls.multi_token = Score(cls.tx_handler, deploy('multi_token'))
-        cls.receiver = Score(cls.tx_handler, deploy('token_receiver'))
+        cls.config = Config(*cls.getLocalEnvs())
+        cls.owner = cls.config.owner
+        cls.tx_handler = cls.config.tx_handler
+        cls.multi_token = Score(cls.tx_handler, deploy(cls.config, 'multi_token'))
+        cls.receiver = Score(cls.tx_handler, deploy(cls.config, 'token_receiver'))
 
     def mint_token(self, token: Score, supply: int):
-        _id = self._getTokenId()
+        _id = self.getTokenId()
         params = {
             '_id': _id,
             '_supply': supply,
@@ -52,7 +53,7 @@ class TestIRC31Receiver(TestBase):
         self.assertSuccess(tx_result['status'])
 
         # Not an owner
-        alice = Config().accounts[0]
+        alice = self.config.accounts[0]
         with self.assertRaises(JSONRPCException):
             self.receiver.invoke(alice, 'setOriginator', params)
 
@@ -75,7 +76,7 @@ class TestIRC31Receiver(TestBase):
         self.assertSuccess(tx_result['status'])
 
         # invoked from an unregistered contract
-        unknown_token = Score(self.tx_handler, deploy('multi_token'))
+        unknown_token = Score(self.tx_handler, deploy(self.config, 'multi_token'))
         _id = self.mint_token(unknown_token, supply)
         params['_id'] = _id
         with self.assertRaises(JSONRPCException):

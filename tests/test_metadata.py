@@ -23,12 +23,13 @@ class TestIRC31Metadata(TestBase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.owner = Config().owner
-        cls.tx_handler = Config().tx_handler
-        cls.score = Score(cls.tx_handler, deploy('multi_token'))
+        config = Config(*cls.getLocalEnvs())
+        cls.owner = config.owner
+        cls.tx_handler = config.tx_handler
+        cls.score = Score(cls.tx_handler, deploy(config, 'multi_token'))
 
     def test_metadata(self):
-        _id = self._getTokenId()
+        _id = self.getTokenId()
         _uri = f'http://nft.info/{_id}'
         params = {
             '_id': _id,

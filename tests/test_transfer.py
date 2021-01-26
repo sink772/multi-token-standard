@@ -24,12 +24,13 @@ class TestIRC31Basic(TestBase):
 
     def setUp(self) -> None:
         super().setUp()
-        self.owner = Config().owner
-        self.tx_handler = Config().tx_handler
-        self.score = Score(self.tx_handler, deploy('multi_token'))
+        self.config = Config(*self.getLocalEnvs())
+        self.owner = self.config.owner
+        self.tx_handler = self.config.tx_handler
+        self.score = Score(self.tx_handler, deploy(self.config, 'multi_token'))
 
     def mint_token(self, supply):
-        _id = self._getTokenId()
+        _id = self.getTokenId()
         params = {
             '_id': _id,
             '_supply': supply,
@@ -43,7 +44,7 @@ class TestIRC31Basic(TestBase):
     def test_transferFrom(self):
         supply = 100
         _id = self.mint_token(supply)
-        alice = Config().accounts[0]
+        alice = self.config.accounts[0]
         params = {
             '_from': self.owner.get_address(),
             '_to': alice.get_address(),
@@ -65,7 +66,7 @@ class TestIRC31Basic(TestBase):
             self.assertEqual(exp, int(balance, 16))
 
         # fail case: alice => bob by owner
-        bob = Config().accounts[1]
+        bob = self.config.accounts[1]
         params['_from'] = alice.get_address()
         params['_to'] = bob.get_address()
         with self.assertRaises(JSONRPCException):
@@ -102,7 +103,7 @@ class TestIRC31Basic(TestBase):
         for i in range(3):
             _id = self.mint_token(supply)
             ids.append(_id)
-        alice = Config().accounts[0]
+        alice = self.config.accounts[0]
         values = [50, 60, 70]
         params = {
             '_from': self.owner.get_address(),
@@ -124,7 +125,7 @@ class TestIRC31Basic(TestBase):
             self.assertEqual(values[i], int(balance, 16))
 
         # fail case: alice => bob by owner
-        bob = Config().accounts[1]
+        bob = self.config.accounts[1]
         values2 = [10, 20, 30]
         params['_from'] = alice.get_address()
         params['_to'] = bob.get_address()

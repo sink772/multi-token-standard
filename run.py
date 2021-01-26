@@ -2,6 +2,7 @@
 
 import argparse
 
+from scripts.config import Config
 from scripts.deploy_contract import deploy
 
 
@@ -9,6 +10,9 @@ class Command:
 
     def __init__(self) -> None:
         parser = argparse.ArgumentParser()
+        parser.add_argument('-e', '--endpoint', type=str, default='local', help='target endpoint for connection')
+        parser.add_argument('-k', '--keystore', type=argparse.FileType('r'), default='res/keystore_test1',
+                            help='keystore file for creating transactions')
         subparsers = parser.add_subparsers(title='Available commands', dest='command')
         subparsers.required = True
 
@@ -20,7 +24,8 @@ class Command:
 
     @staticmethod
     def deploy(args):
-        deploy(args.contract)
+        config = Config(args.endpoint, args.keystore.name)
+        deploy(config, args.contract)
 
 
 if __name__ == "__main__":
