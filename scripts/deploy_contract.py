@@ -17,23 +17,27 @@ from iconsdk.libs.in_memory_zip import gen_deploy_data_content
 from scripts.config import Config
 
 
+def print_empty(*args):
+    pass
+
+
 def get_score_content(target: str):
     score_path = f"./contracts/{target}"
     return gen_deploy_data_content(score_path)
 
 
-def deploy(config: Config, target: str):
+def deploy(config: Config, target: str, verbose=print_empty):
     owner = config.owner
     tx_handler = config.tx_handler
-    print(">>> owner address:", owner.get_address())
+    verbose(">>> owner address:", owner.get_address())
 
     content = get_score_content(target)
-    print(">>> content size =", len(content))
+    verbose(">>> content size =", len(content))
     tx_hash = tx_handler.install(owner, content)
-    print(">>> deploy txHash:", tx_hash)
+    verbose(">>> deploy txHash:", tx_hash)
 
-    tx_result = tx_handler.ensure_tx_result(tx_hash)
+    tx_result = tx_handler.ensure_tx_result(tx_hash, verbose != print_empty)
     score_address = tx_result["scoreAddress"]
-    print(">>> scoreAddress:", score_address)
+    verbose(">>> scoreAddress:", score_address)
     # print(">>> api =", tx_handler.get_score_api(score_address))
     return score_address

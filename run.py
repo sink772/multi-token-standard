@@ -25,7 +25,7 @@ class Command:
     @staticmethod
     def deploy(args):
         config = Config(args.endpoint, args.keystore.name)
-        deploy(config, args.contract)
+        deploy(config, args.contract, print)
 
 
 if __name__ == "__main__":

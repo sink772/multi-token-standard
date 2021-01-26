@@ -87,7 +87,7 @@ class TxHandler:
             .build()
         return self._send_transaction(transaction, wallet, limit)
 
-    def ensure_tx_result(self, tx_hash):
+    def ensure_tx_result(self, tx_hash, verbose=False):
         count = 5
         while True:
             result = self._icon_service.get_transaction_result(tx_hash, True)
@@ -99,9 +99,8 @@ class TxHandler:
                 sleep(2)
             elif 'result' in result:
                 result = result['result']
-                print_response("Result", result)
-                # if result['status'] != '0x1':
-                #     die('Error: transaction failed')
+                if verbose:
+                    print_response("Result", result)
                 return result
             else:
                 print_response("Response", result)
