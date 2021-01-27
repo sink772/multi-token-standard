@@ -36,7 +36,7 @@ class Config(metaclass=Singleton):
         self.owner = load_keystore(keystore_path, passwd)
 
         # generate some test accounts
-        if endpoint == 'local':
+        if endpoint in ('local', 'gochain'):
             self.accounts = []
             for i in range(5):
                 wallet = KeyWallet.create()

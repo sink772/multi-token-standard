@@ -34,24 +34,6 @@ class TxHandler:
     def icon_service(self):
         return self._icon_service
 
-    def _deploy(self, wallet, to, content, params, limit):
-        transaction = DeployTransactionBuilder() \
-            .from_(wallet.get_address()) \
-            .to(to) \
-            .nid(self._nid) \
-            .step_limit(limit) \
-            .content_type("application/zip") \
-            .content(content) \
-            .params(params) \
-            .build()
-        return self._icon_service.send_transaction(SignedTransaction(transaction, wallet))
-
-    def install(self, wallet, content, params=None, limit=0x50000000):
-        return self._deploy(wallet, self.ZERO_ADDRESS, content, params, limit)
-
-    def update(self, wallet, to, content, params=None, limit=0x70000000):
-        return self._deploy(wallet, to, content, params, limit)
-
     def _send_transaction(self, transaction, wallet, limit):
         if limit is not None:
             signed_tx = SignedTransaction(transaction, wallet, limit)
@@ -59,6 +41,23 @@ class TxHandler:
             estimated_step = self._icon_service.estimate_step(transaction)
             signed_tx = SignedTransaction(transaction, wallet, estimated_step)
         return self._icon_service.send_transaction(signed_tx)
+
+    def _deploy(self, wallet, to, content, params, limit):
+        transaction = DeployTransactionBuilder() \
+            .from_(wallet.get_address()) \
+            .to(to) \
+            .nid(self._nid) \
+            .content_type("application/zip") \
+            .content(content) \
+            .params(params) \
+            .build()
+        return self._send_transaction(transaction, wallet, limit)
+
+    def install(self, wallet, content, params=None, limit=None):
+        return self._deploy(wallet, self.ZERO_ADDRESS, content, params, limit)
+
+    def update(self, wallet, to, content, params=None, limit=None):
+        return self._deploy(wallet, to, content, params, limit)
 
     def call(self, to, method, params=None):
         _call = CallBuilder() \
