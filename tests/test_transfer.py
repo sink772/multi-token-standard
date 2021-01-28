@@ -17,7 +17,12 @@ from iconsdk.exception import JSONRPCException
 from scripts.config import Config
 from scripts.deploy_contract import deploy
 from scripts.score import Score
+from scripts.util.rlp import rlp_decode
 from tests import TestBase
+
+
+def bytes_to_int(v: bytes):
+    return int.from_bytes(v, "big", signed=False)
 
 
 class TestIRC31Basic(TestBase):
@@ -54,6 +59,15 @@ class TestIRC31Basic(TestBase):
         tx_hash = self.score.invoke(self.owner, 'transferFrom', params)
         tx_result = self.tx_handler.ensure_tx_result(tx_hash)
         self.assertSuccess(tx_result['status'])
+
+        # check events
+        expected = {
+            'TransferSingle(Address,Address,Address,int,int)': [
+                self.owner.get_address(), self.owner.get_address(), alice.get_address(),
+                hex(_id), hex(supply)
+            ]
+        }
+        self.assertEvents(expected, tx_result['eventLogs'])
 
         # balance check
         for owner, exp in [(self.owner.get_address(), 0),
@@ -146,6 +160,22 @@ class TestIRC31Basic(TestBase):
         tx_hash = self.score.invoke(self.owner, 'transferFromBatch', params)
         tx_result = self.tx_handler.ensure_tx_result(tx_hash)
         self.assertSuccess(tx_result['status'])
+
+        # check TransferBatch events
+        found = False
+        for e in tx_result['eventLogs']:
+            name = e['indexed'][0]
+            if name == 'TransferBatch(Address,Address,Address,bytes,bytes)':
+                self.assertEqual(e['indexed'][1:], [self.owner.get_address(),
+                                                    alice.get_address(),
+                                                    bob.get_address()])
+                data0: list = rlp_decode(bytes.fromhex(e['data'][0][2:]))
+                data1: list = rlp_decode(bytes.fromhex(e['data'][1][2:]))
+                for i in range(len(ids)):
+                    self.assertEqual(ids[i], bytes_to_int(rlp_decode(data0[i])))
+                    self.assertEqual(values2[i], bytes_to_int(rlp_decode(data1[i])))
+                found = True
+        self.assertTrue(found)
 
         # balanceBatch check
         params2 = {

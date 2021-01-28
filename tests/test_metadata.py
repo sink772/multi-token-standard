@@ -30,15 +30,28 @@ class TestIRC31Metadata(TestBase):
 
     def test_metadata(self):
         _id = self.getTokenId()
+        _supply = 100
         _uri = f'http://nft.info/{_id}'
         params = {
             '_id': _id,
-            '_supply': 100,
+            '_supply': _supply,
             '_uri': _uri
         }
         tx_hash = self.score.invoke(self.owner, 'mint', params)
         tx_result = self.tx_handler.ensure_tx_result(tx_hash)
         self.assertSuccess(tx_result['status'])
+
+        # check events
+        expected = {
+            'TransferSingle(Address,Address,Address,int,int)': [
+                self.owner.get_address(), self._ZERO_ADDRESS, self.owner.get_address(),
+                hex(_id), hex(_supply)
+            ],
+            'URI(int,str)': [
+                hex(_id), _uri
+            ]
+        }
+        self.assertEvents(expected, tx_result['eventLogs'])
 
         # check tokenURI
         params2 = {
@@ -56,6 +69,14 @@ class TestIRC31Metadata(TestBase):
         tx_hash = self.score.invoke(self.owner, 'setTokenURI', params3)
         tx_result = self.tx_handler.ensure_tx_result(tx_hash)
         self.assertSuccess(tx_result['status'])
+
+        # check events
+        expected = {
+            'URI(int,str)': [
+                hex(_id), _uri
+            ]
+        }
+        self.assertEvents(expected, tx_result['eventLogs'])
 
         # check updated URI
         result = self.score.call('tokenURI', params2)

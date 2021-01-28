@@ -18,11 +18,22 @@ import unittest
 
 class TestBase(unittest.TestCase):
 
+    _ZERO_ADDRESS = 'hx0000000000000000000000000000000000000000'
+
     def assertSuccess(self, status: str):
         self.assertEqual(1, int(status, 16))
 
     def assertFailure(self, status: str):
         self.assertEqual(0, int(status, 16))
+
+    def assertEvents(self, expected: dict, events: list):
+        self.assertEqual(len(expected.keys()), len(events))
+        for e in events:
+            name = e['indexed'][0]
+            if name in expected.keys():
+                self.assertEqual(e['indexed'][1:] + e['data'], expected[name])
+            else:
+                self.fail(f'Unexpected event: {e}')
 
     @staticmethod
     def getLocalEnvs():

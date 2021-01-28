@@ -65,15 +65,30 @@ class TestIRC31Receiver(TestBase):
     def test_02_onReceived(self):
         supply = 100
         _id = self.mint_token(self.multi_token, supply)
+        _data = b'Hello'
         params = {
             '_from': self.owner.get_address(),
             '_to': self.receiver.address,
             '_id': _id,
-            '_value': int(supply / 2)
+            '_value': int(supply / 2),
+            '_data': _data
         }
         tx_hash = self.multi_token.invoke(self.owner, 'transferFrom', params)
         tx_result = self.tx_handler.ensure_tx_result(tx_hash)
         self.assertSuccess(tx_result['status'])
+
+        # check events
+        expected = {
+            'TransferSingle(Address,Address,Address,int,int)': [
+                self.owner.get_address(), self.owner.get_address(), self.receiver.address,
+                hex(_id), hex(int(supply / 2))
+            ],
+            'IRC31Received(Address,Address,Address,int,int,bytes)': [
+                self.multi_token.address, self.owner.get_address(), self.owner.get_address(),
+                hex(_id), hex(int(supply / 2)), f'0x{_data.hex()}'
+            ]
+        }
+        self.assertEvents(expected, tx_result['eventLogs'])
 
         # invoked from an unregistered contract
         unknown_token = Score(self.tx_handler, deploy(self.config, 'multi_token'))
