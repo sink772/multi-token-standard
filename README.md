@@ -43,8 +43,7 @@ Make sure you are in the virtual environment, and run the following command.
 To deploy the contracts, use the helper script `run.py`
 
 ```
-$ python -h
-
+(.venv) $ ./run.py -h
 usage: run.py [-h] [-e ENDPOINT] [-k KEYSTORE] {deploy} ...
 
 optional arguments:
@@ -65,7 +64,7 @@ Available endpoints:
   gochain: http://localhost:9082
   local: http://localhost:9000
 
-(.venv) $ python run.py -e bicon -k yeouido_wallet_1 deploy multi_token
+(.venv) $ ./run.py -e bicon -k yeouido_wallet_1 deploy multi_token
 ```
 
 ## License
