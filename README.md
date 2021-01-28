@@ -38,6 +38,35 @@ Make sure you are in the virtual environment, and run the following command.
 (.venv) $ make test
 ```
 
+### Deployment
+
+To deploy the contracts, use the helper script `run.py`
+
+```
+(.venv) $ ./run.py -h
+usage: run.py [-h] [-e ENDPOINT] [-k KEYSTORE] {deploy} ...
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -e ENDPOINT, --endpoint ENDPOINT
+                        target endpoint for connection
+  -k KEYSTORE, --keystore KEYSTORE
+                        keystore file for creating transactions
+
+Available commands:
+  {deploy}
+
+Available endpoints:
+  mainnet: https://ctz.solidwallet.io
+  testnet: https://test-ctz.solidwallet.io
+  bicon: https://bicon.net.solidwallet.io
+  gangnam: https://gicon.net.solidwallet.io
+  gochain: http://localhost:9082
+  local: http://localhost:9000
+
+(.venv) $ ./run.py -e bicon -k yeouido_wallet_1 deploy multi_token
+```
+
 ## License
 
 This project is available under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
