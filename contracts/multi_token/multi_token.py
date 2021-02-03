@@ -27,3 +27,7 @@ class SampleMultiToken(IRC31Mintable):
 
     def on_update(self) -> None:
         pass
+
+    @external(readonly=True)
+    def name(self) -> str:
+        return 'SampleMultiToken'
