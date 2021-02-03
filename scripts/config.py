@@ -38,7 +38,7 @@ class Config(metaclass=Singleton):
         # generate some test accounts
         if endpoint in ('local', 'gochain'):
             self.accounts = []
-            for i in range(5):
+            for i in range(2):
                 wallet = KeyWallet.create()
-                self.tx_handler.transfer(self.owner, wallet.get_address(), in_loop(100))
+                self.tx_handler.transfer(self.owner, wallet.get_address(), in_loop(1))
                 self.accounts.append(wallet)
