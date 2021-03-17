@@ -31,10 +31,10 @@ class IRC31Basic(IconScoreBase):
         self._tokenURIs = DictDB('token_uri', db, value_type=str)
 
     def on_install(self) -> None:
-        pass
+        super().on_install()
 
     def on_update(self) -> None:
-        pass
+        super().on_update()
 
     @external(readonly=True)
     def balanceOf(self, _owner: Address, _id: int) -> int:

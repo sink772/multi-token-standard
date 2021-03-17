@@ -22,12 +22,6 @@ class SampleMultiToken(IRC31Mintable):
     def __init__(self, db: 'IconScoreDatabase') -> None:
         super().__init__(db)
 
-    def on_install(self) -> None:
-        pass
-
-    def on_update(self) -> None:
-        pass
-
     @external(readonly=True)
     def name(self) -> str:
         return 'SampleMultiToken'
