@@ -18,7 +18,7 @@ from .irc31_basic import IRC31Basic
 from ..util import require
 
 
-class IRC31Mintable(IRC31Basic):
+class IRC31MintBurn(IRC31Basic):
 
     def __init__(self, db: 'IconScoreDatabase') -> None:
         super().__init__(db)
@@ -28,7 +28,7 @@ class IRC31Mintable(IRC31Basic):
     @external
     def mint(self, _id: int, _supply: int, _uri: str):
         """
-        Creates a new token type and assigns _initialSupply to creator
+        Creates a new token type and assigns _supply to creator
         """
         require(self._creators[_id] is None, "Token is already minted")
         require(_supply > 0, "Supply should be positive")
@@ -36,6 +36,16 @@ class IRC31Mintable(IRC31Basic):
 
         self._creators[_id] = self.msg.sender
         super()._mint(self.msg.sender, _id, _supply, _uri)
+
+    @external
+    def burn(self, _id: int, _amount: int):
+        """
+        Destroys tokens for a given amount
+        """
+        require(self._creators[_id] is not None, "Invalid token id")
+        require(_amount > 0, "Amount should be positive")
+
+        super()._burn(self.msg.sender, _id, _amount)
 
     @external
     def setTokenURI(self, _id: int, _uri: str):

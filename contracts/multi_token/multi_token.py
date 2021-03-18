@@ -14,10 +14,10 @@
 
 from iconservice import *
 
-from .token.irc31_mintable import IRC31Mintable
+from .token.irc31_mintburn import IRC31MintBurn
 
 
-class SampleMultiToken(IRC31Mintable):
+class SampleMultiToken(IRC31MintBurn):
 
     def __init__(self, db: 'IconScoreDatabase') -> None:
         super().__init__(db)

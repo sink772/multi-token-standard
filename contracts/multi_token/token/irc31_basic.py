@@ -252,6 +252,13 @@ class IRC31Basic(IconScoreBase):
         # set token URI and emit event
         self._setTokenURI(_id, _uri)
 
+    def _burn(self, _owner: Address, _id: int, _amount: int):
+        require(0 <= _amount <= self._balances[_id][_owner], "Not an owner or invalid amount")
+        self._balances[_id][_owner] -= _amount
+
+        # emit transfer event for Burn semantic
+        self.TransferSingle(_owner, _owner, ZERO_ADDRESS, _id, _amount)
+
     def _setTokenURI(self, _id: int, _uri: str):
         self._tokenURIs[_id] = _uri
         self.URI(_id, _uri)
