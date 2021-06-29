@@ -14,8 +14,8 @@ deploy-gochain:
 deploy-bicon:
 	./run.py -e bicon -k res/bicon.json deploy multi_token
 
-deploy-gangnam:
-	./run.py -e gangnam -k res/gangnam.json deploy multi_token
+deploy-sejong:
+	./run.py -e sejong -k res/sejong.json deploy multi_token
 
 test:
 	python -m unittest -v

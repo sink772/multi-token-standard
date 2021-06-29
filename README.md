@@ -60,7 +60,7 @@ Available endpoints:
   mainnet: https://ctz.solidwallet.io
   testnet: https://test-ctz.solidwallet.io
   bicon: https://bicon.net.solidwallet.io
-  gangnam: https://gicon.net.solidwallet.io
+  sejong: https://sejong.net.solidwallet.io
   gochain: http://localhost:9082
   local: http://localhost:9000
 

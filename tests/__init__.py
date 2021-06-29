@@ -37,7 +37,7 @@ class TestBase(unittest.TestCase):
 
     @staticmethod
     def getLocalEnvs():
-        return 'local', 'res/keystore_test1', 'test1_Account'
+        return 'gochain', 'res/gochain.json', 'gochain'
 
     @staticmethod
     def getTokenId():
