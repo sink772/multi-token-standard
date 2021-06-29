@@ -42,22 +42,22 @@ class TxHandler:
             signed_tx = SignedTransaction(transaction, wallet, estimated_step)
         return self._icon_service.send_transaction(signed_tx)
 
-    def _deploy(self, wallet, to, content, params, limit):
+    def _deploy(self, wallet, to, content, content_type, params, limit):
         transaction = DeployTransactionBuilder() \
             .from_(wallet.get_address()) \
             .to(to) \
             .nid(self._nid) \
-            .content_type("application/zip") \
+            .content_type(content_type) \
             .content(content) \
             .params(params) \
             .build()
         return self._send_transaction(transaction, wallet, limit)
 
-    def install(self, wallet, content, params=None, limit=None):
-        return self._deploy(wallet, self.ZERO_ADDRESS, content, params, limit)
+    def install(self, wallet, content, content_type='application/zip', params=None, limit=None):
+        return self._deploy(wallet, self.ZERO_ADDRESS, content, content_type, params, limit)
 
-    def update(self, wallet, to, content, params=None, limit=None):
-        return self._deploy(wallet, to, content, params, limit)
+    def update(self, wallet, to, content, content_type='application/zip', params=None, limit=None):
+        return self._deploy(wallet, to, content, content_type, params, limit)
 
     def call(self, to, method, params=None):
         _call = CallBuilder() \

@@ -16,6 +16,8 @@ from iconsdk.libs.in_memory_zip import gen_deploy_data_content
 
 from scripts.config import Config
 
+USE_JAVA_IMPL = False
+
 
 def print_empty(*args):
     pass
@@ -31,9 +33,15 @@ def deploy(config: Config, target: str, verbose=print_empty):
     tx_handler = config.tx_handler
     verbose(">>> owner address:", owner.get_address())
 
-    content = get_score_content(target)
+    if USE_JAVA_IMPL and target == 'multi_token':
+        jar_path = './irc31-token-0.1.0-optimized.jar'
+        content = gen_deploy_data_content(jar_path)
+        content_type = 'application/java'
+    else:
+        content = get_score_content(target)
+        content_type = 'application/zip'
     verbose(">>> content size =", len(content))
-    tx_hash = tx_handler.install(owner, content)
+    tx_hash = tx_handler.install(owner, content, content_type)
     verbose(">>> deploy txHash:", tx_hash)
 
     tx_result = tx_handler.ensure_tx_result(tx_hash, verbose != print_empty)
