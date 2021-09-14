@@ -39,7 +39,4 @@ def rlp_encode_length(size: int, offset: int) -> bytes:
 
 
 def int_to_bytes(x: int) -> bytes:
-    if x == 0:
-        return b''
-    else:
-        return int_to_bytes(int(x / 256)) + bytes([x % 256])
+    return x.to_bytes((x.bit_length() + 7) // 8, 'big', signed=False)
