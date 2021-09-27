@@ -1,5 +1,5 @@
 {
     "version": "0.9.3",
-    "main_file": "multi_token",
+    "main_module": "multi_token",
     "main_score": "SampleMultiToken"
 }
